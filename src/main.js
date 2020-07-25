@@ -1,8 +1,20 @@
 import Vue from 'vue'
-import App from './App.vue'
 
-Vue.config.productionTip = false
+Vue.component('emitter', {template:
+      '<button @click="$root.$emit(`button-clicked`)">Click me</button>'
+});
 
-new Vue({
-  render: h => h(App),
-}).$mount('#app')
+Vue.component('listener', {
+  template: "<div>{{text}}</div>",
+  data: function () { return {
+    text: 'Initial text'
+  }},
+  mounted() {
+    this.$root.$on('button-clicked', () => this.text = 'Button clicked')
+  }
+});
+
+const App = Vue.component('App', {template:
+      "<div id='app'><emitter/><listener/></div>"
+});
+new Vue({render: h => h(App)}).$mount('#app');
